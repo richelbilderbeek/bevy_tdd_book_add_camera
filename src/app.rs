@@ -14,6 +14,10 @@ pub fn create_app(game_parameters: GameParameters) -> App {
         );
     };
     app.add_systems(Startup, add_player_fn);
+    let add_camera_fun = |mut commands: Commands| {
+        commands.spawn(Camera2dBundle::default());
+    };
+    app.add_systems(Startup, add_camera_fun);
 
     // Do not do update, as this will disallow to do more steps
     // app.update(); //Don't!
@@ -86,6 +90,16 @@ fn get_all_components_names(app: &App) -> Vec<String> {
 }
 
 #[cfg(test)]
+fn has_camera(app: &App) -> bool {
+    for c in app.world.components().iter() {
+        if c.name() == "bevy_render::camera::camera::Camera" {
+            return true;
+        }
+    }
+    return false;
+}
+
+#[cfg(test)]
 fn print_all_components_names(app: &App) {
     for c in app.world.components().iter() {
         println!("{}", c.name())
@@ -145,7 +159,6 @@ mod tests {
         assert_eq!(get_player_coordinat(&mut app), initial_coordinat);
     }
 
-
     #[test]
     fn test_player_has_a_custom_scale() {
         let player_scale = Vec3::new(1.1, 2.2, 3.3);
@@ -154,6 +167,20 @@ mod tests {
         let mut app = create_app(game_parameters);
         app.update();
         assert_eq!(get_player_scale(&mut app), player_scale);
+    }
+
+    #[test]
+    fn test_empty_app_has_no_camera() {
+        let mut app = App::new();
+        app.update();
+        assert!(!has_camera(&app));
+    }
+
+    #[test]
+    fn test_app_has_a_camera() {
+        let mut app = create_app(create_default_game_parameters());
+        app.update();
+        assert!(has_camera(&app));
     }
 
     #[test]
@@ -169,7 +196,7 @@ mod tests {
         let mut app = create_app(create_default_game_parameters());
         app.update();
         let v = get_all_components_names(&app);
-        assert_eq!(v.len(), 15);
+        assert_eq!(v.len(), 24);
     }
 
     #[test]
