@@ -103,7 +103,7 @@ fn has_camera(app: &App) -> bool {
             return true;
         }
     }
-    return false;
+    false
 }
 
 #[cfg(test)]
