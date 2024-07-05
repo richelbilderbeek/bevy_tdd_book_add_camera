@@ -65,6 +65,13 @@ fn count_n_players(app: &App) -> usize {
 }
 
 #[cfg(test)]
+fn get_camera_scale(app: &mut App) -> f32 {
+    let mut query = app.world.query::<&OrthographicProjection>();
+    let projection = query.single(&app.world);
+    projection.scale
+}
+
+#[cfg(test)]
 fn get_player_coordinat(app: &mut App) -> Vec3 {
     let mut query = app.world.query::<(&Transform, &Player)>();
     let (transform, _) = query.single(&app.world);
@@ -181,6 +188,13 @@ mod tests {
         let mut app = create_app(create_default_game_parameters());
         app.update();
         assert!(has_camera(&app));
+    }
+
+    #[test]
+    fn test_get_camera_scale() {
+        let mut app = create_app(create_default_game_parameters());
+        app.update();
+        assert_eq!(get_camera_scale(&mut app), 1.0);
     }
 
     #[test]
