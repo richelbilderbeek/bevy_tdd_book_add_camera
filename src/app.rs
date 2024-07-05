@@ -14,8 +14,10 @@ pub fn create_app(game_parameters: GameParameters) -> App {
         );
     };
     app.add_systems(Startup, add_player_fn);
-    let add_camera_fun = |mut commands: Commands| {
-        commands.spawn(Camera2dBundle::default());
+    let add_camera_fun = move |mut commands: Commands| {
+        let mut bundle = Camera2dBundle::default();
+        bundle.projection.scale = game_parameters.initial_camera_scale;
+        commands.spawn(bundle);
     };
     app.add_systems(Startup, add_camera_fun);
 
@@ -195,6 +197,16 @@ mod tests {
         let mut app = create_app(create_default_game_parameters());
         app.update();
         assert_eq!(get_camera_scale(&mut app), 1.0);
+    }
+
+    #[test]
+    fn test_game_parameters_use_camera_scale() {
+        let custom_camera_scale: f32 = 5.0;
+        let mut params = create_default_game_parameters();
+        params.initial_camera_scale = custom_camera_scale;
+        let mut app = create_app(params);
+        app.update();
+        assert_eq!(get_camera_scale(&mut app), custom_camera_scale);
     }
 
     #[test]
