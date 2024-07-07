@@ -31,11 +31,6 @@ fn add_player(mut commands: Commands) {
     commands.spawn(Player);
 }
 
-#[cfg(test)]
-fn add_player_with_sprite(mut commands: Commands) {
-    commands.spawn((SpriteBundle { ..default() }, Player));
-}
-
 fn add_player_with_sprite_at_pos_with_scale(
     mut commands: Commands,
     initial_player_position: Vec3,
@@ -68,21 +63,21 @@ fn count_n_players(app: &App) -> usize {
 
 #[cfg(test)]
 fn get_camera_scale(app: &mut App) -> f32 {
-    let mut query = app.world().query::<&OrthographicProjection>();
+    let mut query = app.world_mut().query::<&OrthographicProjection>();
     let projection = query.single(&app.world());
     projection.scale
 }
 
 #[cfg(test)]
 fn get_player_coordinat(app: &mut App) -> Vec3 {
-    let mut query = app.world().query::<(&Transform, &Player)>();
+    let mut query = app.world_mut().query::<(&Transform, &Player)>();
     let (transform, _) = query.single(&app.world());
     transform.translation
 }
 
 #[cfg(test)]
 fn get_player_scale(app: &mut App) -> Vec3 {
-    let mut query = app.world().query::<(&Transform, &Player)>();
+    let mut query = app.world_mut().query::<(&Transform, &Player)>();
     let (transform, _) = query.single(&app.world());
     transform.scale
 }
