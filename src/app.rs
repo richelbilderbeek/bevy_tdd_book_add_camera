@@ -32,6 +32,12 @@ fn add_player(mut commands: Commands) {
 }
 
 #[cfg(test)]
+fn count_n_cameras(app: &mut App) -> usize {
+    let mut query = app.world_mut().query::<&Camera>();
+    return query.iter(app.world_mut()).len();
+}
+
+#[cfg(test)]
 fn count_n_players(app: &mut App) -> usize {
     let mut query = app.world_mut().query::<&Player>();
     return query.iter(app.world_mut()).len();
@@ -45,10 +51,10 @@ fn get_camera_scale(app: &mut App) -> f32 {
 }
 
 #[cfg(test)]
-fn get_player_coordinat(app: &mut App) -> Vec3 {
+fn get_player_position(app: &mut App) -> Vec2 {
     let mut query = app.world_mut().query::<(&Transform, &Player)>();
     let (transform, _) = query.single(app.world());
-    transform.translation
+    transform.translation.xy()
 }
 
 #[cfg(test)]
@@ -59,38 +65,30 @@ fn get_player_scale(app: &mut App) -> Vec3 {
 }
 
 #[cfg(test)]
-fn has_camera(app: &App) -> bool {
-    for c in app.world().components().iter() {
-        if c.name() == "bevy_render::camera::camera::Camera" {
-            return true;
-        }
-    }
-    false
-}
-
-#[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn test_can_create_app() {
-        let initial_camera_scale = 1.0;
-        create_app(initial_camera_scale);
+    fn test_empty_app_has_no_cameras() {
+        let mut app = App::new();
+        app.update();
+        assert_eq!(count_n_cameras(&mut app), 0);
+    }
+
+    #[test]
+    fn test_create_app_uses_camera_scale() {
+        let initial_camera_scale = 1.2;
+        let mut app = create_app(initial_camera_scale);
+        app.update();
+        assert_eq!(count_n_cameras(&mut app), 1);
+        assert_eq!(get_camera_scale(&mut app), initial_camera_scale);
     }
 
     #[test]
     fn test_empty_app_has_no_players() {
         let mut app = App::new();
-        assert_eq!(count_n_players(&mut app), 0);
-    }
-
-    #[test]
-    fn test_setup_player_adds_a_player() {
-        let mut app = App::new();
-        assert_eq!(count_n_players(&mut app), 0);
-        app.add_systems(Startup, add_player);
         app.update();
-        assert_eq!(count_n_players(&mut app), 1);
+        assert_eq!(count_n_players(&mut app), 0);
     }
 
     #[test]
@@ -102,11 +100,11 @@ mod tests {
     }
 
     #[test]
-    fn test_get_player_coordinat() {
-        let initial_camera_scale = 1.0;
+    fn test_get_player_position() {
+        let initial_camera_scale = 1.0; // Irrelevant
         let mut app = create_app(initial_camera_scale);
         app.update();
-        assert_eq!(get_player_coordinat(&mut app), Vec3::new(0.0, 0.0, 0.0));
+        assert_eq!(get_player_position(&mut app), Vec2::new(0.0, 0.0));
     }
 
     #[test]
@@ -115,28 +113,5 @@ mod tests {
         let mut app = create_app(initial_camera_scale);
         app.update();
         assert_eq!(get_player_scale(&mut app), Vec3::new(128.0, 32.0, 0.0));
-    }
-
-    #[test]
-    fn test_empty_app_has_no_camera() {
-        let mut app = App::new();
-        app.update();
-        assert!(!has_camera(&app));
-    }
-
-    #[test]
-    fn test_app_has_a_camera() {
-        let initial_camera_scale = 1.0;
-        let mut app = create_app(initial_camera_scale);
-        app.update();
-        assert!(has_camera(&app));
-    }
-
-    #[test]
-    fn test_get_camera_scale() {
-        let initial_camera_scale = 1.2;
-        let mut app = create_app(initial_camera_scale);
-        app.update();
-        assert_eq!(get_camera_scale(&mut app), initial_camera_scale);
     }
 }
