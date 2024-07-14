@@ -8,7 +8,7 @@ pub fn create_app(initial_camera_scale: f32) -> App {
     app.add_systems(Startup, add_player);
     let add_camera_fun = move |mut commands: Commands| {
         let mut bundle = Camera2dBundle::default();
-        bundle.projection.scale = initial_camera_scale;
+        bundle.projection.size = initial_camera_scale;
         commands.spawn(bundle);
     };
     app.add_systems(Startup, add_camera_fun);
@@ -22,7 +22,7 @@ fn add_player(mut commands: Commands) {
     commands.spawn((
         SpriteBundle {
             transform: Transform {
-                scale: Vec3::new(128.0, 32.0, 0.0),
+                size: Vec3::new(128.0, 32.0, 0.0),
                 ..default()
             },
             ..default()
@@ -47,7 +47,7 @@ fn count_n_players(app: &mut App) -> usize {
 fn get_camera_scale(app: &mut App) -> f32 {
     let mut query = app.world_mut().query::<&OrthographicProjection>();
     let projection = query.single(app.world());
-    projection.scale
+    projection.size
 }
 
 #[cfg(test)]
@@ -61,7 +61,7 @@ fn get_player_position(app: &mut App) -> Vec2 {
 fn get_player_size(app: &mut App) -> Vec3 {
     let mut query = app.world_mut().query::<(&Transform, &Player)>();
     let (transform, _) = query.single(app.world());
-    transform.scale
+    transform.size
 }
 
 #[cfg(test)]
