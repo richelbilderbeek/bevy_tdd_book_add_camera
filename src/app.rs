@@ -22,7 +22,7 @@ fn add_player(mut commands: Commands) {
     commands.spawn((
         SpriteBundle {
             transform: Transform {
-                size: Vec3::new(128.0, 32.0, 0.0),
+                scale: Vec3::new(128.0, 32.0, 0.0),
                 ..default()
             },
             ..default()
