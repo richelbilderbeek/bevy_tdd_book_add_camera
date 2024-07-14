@@ -43,11 +43,12 @@ fn count_n_players(app: &mut App) -> usize {
     return query.iter(app.world_mut()).len();
 }
 
+
 #[cfg(test)]
 fn get_camera_scale(app: &mut App) -> f32 {
     let mut query = app.world_mut().query::<&OrthographicProjection>();
     let projection = query.single(app.world());
-    projection.size
+    projection.scale
 }
 
 #[cfg(test)]
@@ -112,6 +113,14 @@ mod tests {
         let initial_camera_scale = 1.0;
         let mut app = create_app(initial_camera_scale);
         app.update();
-        assert_eq!(get_player_size(&mut app), Vec3::new(128.0, 32.0, 0.0));
+        assert_eq!(get_player_size(&mut app), Vec2::new(128.0, 32.0));
+    }
+
+    #[test]
+    fn test_get_camera_scale() {
+        let initial_camera_scale = 1.2;
+        let mut app = create_app(initial_camera_scale);
+        app.update();
+        assert_eq!(get_camera_scale(&mut app), initial_camera_scale);
     }
 }
