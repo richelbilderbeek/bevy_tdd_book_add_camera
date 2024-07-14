@@ -58,7 +58,7 @@ fn get_player_position(app: &mut App) -> Vec2 {
 }
 
 #[cfg(test)]
-fn get_player_scale(app: &mut App) -> Vec3 {
+fn get_player_size(app: &mut App) -> Vec3 {
     let mut query = app.world_mut().query::<(&Transform, &Player)>();
     let (transform, _) = query.single(app.world());
     transform.scale
@@ -108,10 +108,10 @@ mod tests {
     }
 
     #[test]
-    fn test_get_player_scale() {
+    fn test_get_player_size() {
         let initial_camera_scale = 1.0;
         let mut app = create_app(initial_camera_scale);
         app.update();
-        assert_eq!(get_player_scale(&mut app), Vec3::new(128.0, 32.0, 0.0));
+        assert_eq!(get_player_size(&mut app), Vec3::new(128.0, 32.0, 0.0));
     }
 }
