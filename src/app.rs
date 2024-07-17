@@ -43,7 +43,6 @@ fn count_n_players(app: &mut App) -> usize {
     return query.iter(app.world_mut()).len();
 }
 
-
 #[cfg(test)]
 fn get_camera_scale(app: &mut App) -> f32 {
     let mut query = app.world_mut().query::<&OrthographicProjection>();
