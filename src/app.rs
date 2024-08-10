@@ -12,9 +12,7 @@ pub fn create_app(initial_camera_scale: f32) -> App {
         commands.spawn(bundle);
     };
     app.add_systems(Startup, add_camera_fun);
-
-    // Do not do update, as this will disallow to do more steps
-    // app.update(); //Don't!
+    app.update();
     app
 }
 
@@ -79,7 +77,6 @@ mod tests {
     fn test_create_app_uses_camera_scale() {
         let initial_camera_scale = 1.2;
         let mut app = create_app(initial_camera_scale);
-        app.update();
         assert_eq!(count_n_cameras(&mut app), 1);
         assert_eq!(get_camera_scale(&mut app), initial_camera_scale);
     }
@@ -87,7 +84,6 @@ mod tests {
     #[test]
     fn test_empty_app_has_no_players() {
         let mut app = App::new();
-        app.update();
         assert_eq!(count_n_players(&mut app), 0);
     }
 
@@ -95,7 +91,6 @@ mod tests {
     fn test_create_app_has_a_player() {
         let initial_camera_scale = 1.0;
         let mut app = create_app(initial_camera_scale);
-        app.update();
         assert_eq!(count_n_players(&mut app), 1);
     }
 
@@ -103,7 +98,6 @@ mod tests {
     fn test_get_player_position() {
         let initial_camera_scale = 1.0; // Irrelevant
         let mut app = create_app(initial_camera_scale);
-        app.update();
         assert_eq!(get_player_position(&mut app), Vec2::new(0.0, 0.0));
     }
 
@@ -111,7 +105,6 @@ mod tests {
     fn test_get_player_size() {
         let initial_camera_scale = 1.0;
         let mut app = create_app(initial_camera_scale);
-        app.update();
         assert_eq!(get_player_size(&mut app), Vec2::new(128.0, 32.0));
     }
 
@@ -119,7 +112,6 @@ mod tests {
     fn test_get_camera_scale() {
         let initial_camera_scale = 1.2;
         let mut app = create_app(initial_camera_scale);
-        app.update();
         assert_eq!(get_camera_scale(&mut app), initial_camera_scale);
     }
 }
