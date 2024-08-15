@@ -6,7 +6,7 @@ pub struct Player;
 pub fn create_app(initial_camera_scale: f32) -> App {
     let mut app = App::new();
     app.add_systems(Startup, add_player);
-    let add_camera_fun = move |mut commands: Commands| {
+    let add_camera_fn = move |mut commands: Commands| {
         let mut bundle = Camera2dBundle::default();
         bundle.projection.scale = initial_camera_scale;
         commands.spawn(bundle);
