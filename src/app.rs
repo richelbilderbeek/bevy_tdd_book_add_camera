@@ -11,7 +11,7 @@ pub fn create_app(initial_camera_scale: f32) -> App {
         bundle.projection.scale = initial_camera_scale;
         commands.spawn(bundle);
     };
-    app.add_systems(Startup, add_camera_fun);
+    app.add_systems(Startup, add_camera_fn);
     app.update();
     app
 }
