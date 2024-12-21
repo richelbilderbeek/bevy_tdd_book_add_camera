@@ -18,7 +18,7 @@ pub fn create_app(initial_camera_scale: f32) -> App {
 
 fn add_player(mut commands: Commands) {
     commands.spawn((
-        SpriteBundle {
+        Sprite {
             transform: Transform {
                 scale: Vec3::new(128.0, 32.0, 0.0),
                 ..default()
